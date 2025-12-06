@@ -1,6 +1,6 @@
 import viterbi
 from viterbi import Nucleotide, viterbi
-
+from align import align
 
 sequence : list[Nucleotide] = [
                                 Nucleotide.G,
@@ -15,4 +15,4 @@ sequence : list[Nucleotide] = [
 
 
 states = viterbi(sequence)
-print(states)
+align(sequence, states)
