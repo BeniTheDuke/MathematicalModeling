@@ -85,6 +85,11 @@ def viterbi(sequence: list[Nucleotide])-> list[State]:
             new_step.max_v_in_poor = v_poor_now_poor
             new_step.poor_comes_from = State.POOR
 
+        # Avoid floating point underflow
+        if (new_step.max_v_in_rich < 0.1) & (new_step.max_v_in_poor < 0.1):
+            new_step.max_v_in_rich = new_step.max_v_in_rich * 100
+            new_step.max_v_in_poor = new_step.max_v_in_poor * 100
+
         current_step = new_step;
 
 
