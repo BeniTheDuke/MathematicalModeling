@@ -18,6 +18,13 @@ TRANS_MAT = np.array([
     [0.6, 0.4]  # P
 ])
 
+# Improved transition matrix
+# TRANS_MAT = np.array([
+#     # R    P
+#     [0.7, 0.3], # R
+#     [0.4, 0.6]  # P
+# ])
+
 EMISS_MAT = np.array([
     # T    C    A    G
     [0.2, 0.3, 0.2, 0.3],  # R
