@@ -43,20 +43,21 @@ class Step:
     poor_comes_from : State
 
 
-    def backtrack(self, states: list[State], current_state: State) -> list[State]:
+    def backtrack(self, states: list[State]) -> list[State]:
         if self.previous_step is None:
             return states
 
-        state_of_previous: State
+        state_for_this_step = states[0]
 
-        if current_state == State.RICH:
+        state_of_previous: State
+        if state_for_this_step == State.RICH:
             state_of_previous = self.rich_comes_from
         else: 
             state_of_previous = self.poor_comes_from
 
         states.insert(0, state_of_previous)
 
-        return self.previous_step.backtrack(states, state_of_previous)
+        return self.previous_step.backtrack(states)
 
 
 def viterbi(sequence: list[Nucleotide])-> list[State]:
@@ -111,4 +112,4 @@ def viterbi(sequence: list[Nucleotide])-> list[State]:
     states = [state]
 
     # Backtracking
-    return current_step.backtrack(states, state)
+    return current_step.backtrack(states)
