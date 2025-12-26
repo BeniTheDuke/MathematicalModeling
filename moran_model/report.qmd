@@ -1,0 +1,30 @@
+---
+title: "Moran Simulation"
+author: "Eleni Karfopoulou & Benjamin Herzog"
+format:
+  html:
+    toc: true
+    number-sections: true
+  pdf:
+    number-sections: true
+execute:
+  echo: true
+  warning: false
+  message: false
+---
+
+# The Moran model: Fixation time of beneficial alleles in populations of constant size
+*(1) Formally define the Moran model of population dynamics with selection. List model’s assumptions. What is the probability of fixation of an allele, how does it depend on allele fitness? Write a program to simulate a population with selection.*
+
+```{python}
+from moran import MoranModel
+
+SEED = 42
+
+moran_model = MoranModel(100, 50, 1, 1, SEED)
+for i in range(1,10):
+    print(moran_model.run_until_absorption())
+
+
+```
+

@@ -208,3 +208,6 @@ __marimo__/
 
 # Nvim
 pyrightconfig.json
+
+# Report PDF
+moran_model/*.pdf
