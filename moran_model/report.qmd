@@ -109,6 +109,32 @@ for i in range(0,101,10):
 
 ```
 
+Accordingly, the code below checks whether the observed fixation rate matches the expected fixation probability for different values r of fitness of A:
+
+```{python}
+SEED = 42
+N = 100
+
+for i in range(10,91,10):
+  for r in np.arange(0.2,2.1,0.4):
+    
+    moran_model = MoranModel(N, i, r, 1, SEED)
+    
+    if r == 1:
+      fix_prob = i/N
+    else:
+      fix_prob = (1 - 1/r**i)/(1 - 1/r**N)
+    
+    count=[] # list of the end states of i
+    
+    for run in range(1000):
+      count.append(moran_model.run_until_absorption())
+    obs_fix = (count.count(100))/1000
+    
+    print(i, f"{r:.2f}", f"{fix_prob:.4f}", f"{obs_fix:.4f}")
+
+```
+
 ### *(3) Use your program to simulate data over time with and without selection for different population sizes. Vary the selection intensity to include a range of different values (both negative and positive selection). Summarize your results graphically. Is selection more efficient in smaller or larger populations? Can deleterious alleles (with negative selection coefficient) get fixed in a population? Under which conditions?*
 
 ### *(4) The Moran model is a birth-death model. How do the birth-death parameters influence the behavior of the model? Show in simulation. Discuss your results.*
