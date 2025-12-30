@@ -91,6 +91,24 @@ for i in range(1,10):
 
 ### *(2) Validate your program in simple simulation, show the results of validation.*
 
+In a neutral model where fitness = 1 for both alleles, the fixation probability is i/N. If we run the model for 1000 runs, for N = 100, for different i, the number of times the end state of i is 100 should approximate i/N, as shown in the code below:
+
+```{python}
+SEED = 42
+N = 100
+
+for i in range(0,101,10):
+  moran_model = MoranModel(N, i, 1, 1, SEED)
+  fix_prob = i/N
+  count=[] # list of the end states of i
+  for run in range(1000):
+    count.append(moran_model.run_until_absorption())
+    obs_fix = (count.count(100))/1000
+  
+  print(i, fix_prob, obs_fix)
+
+```
+
 ### *(3) Use your program to simulate data over time with and without selection for different population sizes. Vary the selection intensity to include a range of different values (both negative and positive selection). Summarize your results graphically. Is selection more efficient in smaller or larger populations? Can deleterious alleles (with negative selection coefficient) get fixed in a population? Under which conditions?*
 
 ### *(4) The Moran model is a birth-death model. How do the birth-death parameters influence the behavior of the model? Show in simulation. Discuss your results.*
