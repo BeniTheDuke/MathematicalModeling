@@ -14,7 +14,68 @@ execute:
 ---
 
 # The Moran model: Fixation time of beneficial alleles in populations of constant size
-*(1) Formally define the Moran model of population dynamics with selection. List model’s assumptions. What is the probability of fixation of an allele, how does it depend on allele fitness? Write a program to simulate a population with selection.*
+
+### *(1) Formally define the Moran model of population dynamics with selection. List model’s assumptions. What is the probability of fixation of an allele, how does it depend on allele fitness? Write a program to simulate a population with selection.*
+
+The Moran model is a birth-death Markov model used to study population dynamics in biology. In this particular model we study the distribution of alleles across generations when there is selection, i.e. a particular allele presents with increased (or decreased) fitness that affects its probability for reproduction, as opposed to the neutral drift model, when alleles reproduce at the same rate. Chapter 6 of *Nowak, 2006* is used as reference.
+
+#### Model assumptions:
+
+-   The size of the population, *N*, is fixed.
+
+-   There are two types of alleles of interest in the population, A and B. (For ease of reference, we will refer to the individuals -carrying those alleles- as A and B.)
+
+-   [At every one time step]{.underline}, one random individual from the population is chosen to reproduce and one random individual is chosen to die. Sampling with replacement applies, i.e. it could be the same individual chosen for reproduction as well as death.
+
+-   Reproduction leads to A producing A, and B producing B.
+
+-   In a Moran model with selection, A has fitness *r* and B has fitness 1. If *r* \> 1, selection favors A; if *r* \< 1, selection favors B. (When *r* = 1, this is the case of neutral drift.)
+
+#### Model description:
+
+-   The number of A individuals in the population is denoted *i*, and the number of B individuals is thus *N - i*. The state space of *i* is 0, …., *N*.
+
+-   The probability of choosing an A individual for reproduction is *(r \* i) / \[r \* i + (N - i ) \* 1\] = (r \* i) / (r \* i + N - i)*.
+
+-   The probability of choosing B for reproduction is *(N - i) / (r \* i + N - i)*.
+
+-   The probability of choosing an A individual for death is *i/N*, for a B individual it is *(N - i)/N*.
+
+-   In every time step there are four possible scenarios:
+
+    -   With probability *\[(r \* i) / (r \* i + N - i)\] \* (i/N)*, an A is chosen for birth as well as death; *i* remains unchanged.
+
+    -   With probability *\[(N - i) / (r \* i + N - i)\] \* (N - i)/N*, a B is chosen for birth as well as death; *i* remains unchanged.
+
+    -   With probability *\[(r \* i) / (r \* i + N - i)\] \* (N - i)/N*, an A is chosen for birth and a B for death; *i* becomes *i + 1*.
+
+    -   With probability *\[(N - i) / (r \* i + N - i)\] \* i/N*, a B is chosen for birth and an A for death; *i* becomes *i - 1*.
+
+<!-- -->
+
+-   The transition matrix from state *i* to state *j* is accordingly described by
+
+    -   P~i, i-1~ = *\[(N - i) / (r \* i + N - i)\] \* i/N*
+
+    -   P~i, i~ = *1 - P~i, i-1~ - P~i, i+1~*
+
+    -   P~i, i+1~ = *\[(r \* i) / (r \* i + N - i)\] \* (N - i)/N*
+
+-   No other transition is possible, thus all other entries are 0. Also, P~0, 0~ = 1, P~0, i~ = 0, P~N, N~ = 1 and P~N, 0~ = 0, i.e. 0 and *N* are absorbing states.
+
+The **fixation probability** of A refers to the probability of reaching a state where *i = N*, i.e. A has overtaken the entire population. In this model with selection, with the relative fitness of A being *r*, the fixation probability, starting from *i* individuals of A, is:
+
+χ~i~ = (1 - 1/r^i^) / (1 - 1/r^N^)
+
+-   If there is no selective advantage, starting with *i* individuals of A, the probability of A overtaking the entire *N* population is *i/N*.
+
+-   If *r* \>1 in a large population *N*, the denominator approaches 1 and the equation approximates 1 - 1/r^i.^
+
+-   If *r* \< 1, the nominator approaches 0 as *r* gets smaller.
+
+#### Model simulation:
+
+The below program simulates a Moran population model with selection.
 
 ```{python}
 from moran import MoranModel
@@ -28,3 +89,12 @@ for i in range(1,10):
 
 ```
 
+### *(2) Validate your program in simple simulation, show the results of validation.*
+
+### *(3) Use your program to simulate data over time with and without selection for different population sizes. Vary the selection intensity to include a range of different values (both negative and positive selection). Summarize your results graphically. Is selection more efficient in smaller or larger populations? Can deleterious alleles (with negative selection coefficient) get fixed in a population? Under which conditions?*
+
+### *(4) The Moran model is a birth-death model. How do the birth-death parameters influence the behavior of the model? Show in simulation. Discuss your results.*
+
+## REFERENCES
+
+NOWAK, M. A. (2006). *Evolutionary Dynamics: Exploring the Equations of Life.* Harvard University Press. https://doi.org/10.2307/j.ctvjghw98
