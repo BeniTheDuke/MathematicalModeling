@@ -20,14 +20,15 @@ class MoranModel:
         self.i = i
         self.fitness_A = fitness_A
         self.fitness_B = fitness_B
+        self.i_history = [self.i]
 
     def reset(self):
         self.N = self.initial_N
         self.i = self.initial_i
-        # todo: Maybe add a step counter?
+        self.i_history = [self.i]
 
 
-    def run_until_absorption(self):
+    def run_until_absorption(self) -> list[int]:
         self.reset() 
 
         while (self.i > 0 ) & (self.i < self.N): 
@@ -40,8 +41,9 @@ class MoranModel:
             elif random_number < (p_increase + p_decrease):
                 self.i -= 1
 
-        return self.i
+            self.i_history.append(self.i)
 
+        return self.i_history
 
     def probability_i_increase(self):
         return self.probability_A_reproduces() * self.probability_B_dies()
