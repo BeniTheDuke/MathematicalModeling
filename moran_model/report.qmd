@@ -12,6 +12,13 @@ execute:
   warning: false
   message: false
 ---
+```{python}
+#| echo: false
+#| include: false
+
+import numpy as np
+from moran import MoranModel
+```
 
 # The Moran model: Fixation time of beneficial alleles in populations of constant size
 
