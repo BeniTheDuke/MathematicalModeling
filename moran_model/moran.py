@@ -8,8 +8,8 @@ class MoranModel:
             self, 
             N: int, 
             i: int, 
-            fitness_A: int,
-            fitness_B: int,
+            fitness_A: float,
+            fitness_B: float,
             seed = 42
             ):
 
