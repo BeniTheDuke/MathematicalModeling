@@ -1,0 +1,217 @@
+---
+title: "Moran Simulation"
+author: "Eleni Karfopoulou & Benjamin Herzog"
+format:
+  html:
+    toc: true
+    number-sections: true
+  pdf:
+    number-sections: true
+execute:
+  echo: true
+  warning: false
+  message: false
+---
+```{python}
+#| echo: false
+#| include: false
+
+import numpy as np
+from moran import MoranModel
+import matplotlib.pyplot as plt
+```
+
+# Set Seed
+```{python}
+SEED = 42
+```
+
+
+# Simple History of one experiment
+```{python}
+moran_model = MoranModel(100, 50, 1, 1, SEED)
+history = moran_model.run_until_absorption()
+
+plt.figure()
+plt.plot(history)
+plt.xlabel("Step")
+plt.ylabel("i")
+plt.tight_layout()
+plt.show()
+  
+```
+
+# Trying different Ns (Equal fitness)
+## i = N/2
+```{python}
+
+amount_of_experiments = 100
+n_list = range(4, 105, 10)
+average_steps = []
+
+for n in n_list:
+  total_steps = 0
+  
+  moran_model = MoranModel(n, n/2, 1, 1, SEED)
+  for i in range (amount_of_experiments):
+    history = moran_model.run_until_absorption()
+    total_steps += len(history)
+  
+  average_steps.append(total_steps/amount_of_experiments)
+
+
+plt.figure()
+plt.plot(n_list, average_steps)
+plt.xlabel("N")
+plt.ylabel("Steps")
+plt.tight_layout()
+plt.show()
+
+```
+
+
+## i = (N/2) - 1
+```{python}
+
+amount_of_experiments = 100
+n_list = range(4, 105, 10)
+average_steps = []
+
+for n in n_list:
+  total_steps = 0
+  
+  moran_model = MoranModel(n, (n/2) -1 , 1, 1, SEED)
+  for i in range (amount_of_experiments):
+    history = moran_model.run_until_absorption()
+    total_steps += len(history)
+  
+  average_steps.append(total_steps/amount_of_experiments)
+
+
+plt.figure()
+plt.plot(n_list, average_steps)
+plt.xlabel("N")
+plt.ylabel("Steps")
+plt.tight_layout()
+plt.show()
+
+```
+
+
+
+## i = n/4
+```{python}
+
+amount_of_experiments = 100
+n_list = range(4, 105, 10)
+average_steps = []
+
+for n in n_list:
+  total_steps = 0
+  
+  moran_model = MoranModel(n, (n/4) , 1, 1, SEED)
+  for i in range (amount_of_experiments):
+    history = moran_model.run_until_absorption()
+    total_steps += len(history)
+  
+  average_steps.append(total_steps/amount_of_experiments)
+
+
+plt.figure()
+plt.plot(n_list, average_steps)
+plt.xlabel("N")
+plt.ylabel("Steps")
+plt.tight_layout()
+plt.show()
+
+```
+
+
+## i = 1
+```{python}
+
+amount_of_experiments = 100
+n_list = range(4, 105, 10)
+average_steps = []
+
+for n in n_list:
+  total_steps = 0
+  
+  moran_model = MoranModel(n, 1, 1, 1, SEED)
+  for i in range (amount_of_experiments):
+    history = moran_model.run_until_absorption()
+    total_steps += len(history)
+  
+  average_steps.append(total_steps/amount_of_experiments)
+
+
+plt.figure()
+plt.plot(n_list, average_steps)
+plt.xlabel("N")
+plt.ylabel("Steps")
+plt.tight_layout()
+plt.show()
+
+```
+
+# Different A fitnesses
+
+## 0.99
+```{python}
+moran_model = MoranModel(100, 50, 0.99, 1, SEED)
+
+plt.figure()
+for _ in range(5):
+    history = moran_model.run_until_absorption()
+    plt.plot(history)
+plt.xlabel("Step")
+plt.ylabel("i")
+plt.tight_layout()
+plt.show()
+  
+```
+
+## 0.95
+```{python}
+moran_model = MoranModel(100, 50, 0.95, 1, SEED)
+
+plt.figure()
+for _ in range(5):
+    history = moran_model.run_until_absorption()
+    plt.plot(history)
+plt.xlabel("Step")
+plt.ylabel("i")
+plt.tight_layout()
+plt.show()
+  
+```
+
+## 0.9
+```{python}
+moran_model = MoranModel(100, 50, 0.9, 1, SEED)
+
+plt.figure()
+for _ in range(5):
+    history = moran_model.run_until_absorption()
+    plt.plot(history)
+plt.xlabel("Step")
+plt.ylabel("i")
+plt.tight_layout()
+plt.show()
+  
+```
+
+## 0.8
+```{python}
+moran_model = MoranModel(100, 50, 0.8, 1, SEED)
+
+plt.figure()
+for _ in range(5):
+    history = moran_model.run_until_absorption()
+    plt.plot(history)
+plt.xlabel("Step")
+plt.ylabel("i")
+plt.tight_layout()
+plt.show()
+  
+```
