@@ -211,3 +211,5 @@ pyrightconfig.json
 
 # Report PDF
 moran_model/*.pdf
+moran_model/*.html
+moran_model/.Rhistory

@@ -18,6 +18,8 @@ execute:
 
 import numpy as np
 from moran import MoranModel
+import matplotlib.pyplot as plt
+
 ```
 
 # The Moran model: Fixation time of beneficial alleles in populations of constant size
@@ -99,29 +101,53 @@ for i in range(1,10):
 In a neutral model where fitness = 1 for both alleles, the fixation probability is i/N. If we run the model for 1000 runs, for N = 100, for different i, the number of times the end state of i is 100 should approximate i/N, as shown in the code below:
 
 ```{python}
-SEED = 42
 N = 100
+n_of_experiments = 10 #todo change back to 1000
 
-for i in range(0,101,10):
+
+observed_probs = []
+calculated_probs = []
+i_list = range(0,101,10)
+
+for i in i_list:
   moran_model = MoranModel(N, i, 1, 1, SEED)
   fix_prob = i/N
   count=[] # list of the end states of i
-  for run in range(1000):
+  for run in range(n_of_experiments):
     count.append(moran_model.run_until_absorption()[-1])
-    obs_fix = (count.count(100))/1000
+    obs_fix = (count.count(100))/n_of_experiments
   
-  print(i, fix_prob, obs_fix)
+  
+  calculated_probs.append(fix_prob)
+  observed_probs.append(obs_fix)
+  
+w = 0.3 # Width 
+x = np.arange(len(i_list))
+plt.figure()
+plt.bar(x - w/2, calculated_probs, width=w, label="Calculated")
+plt.bar(x + w/2, observed_probs, width=w, label="Simulated")
+plt.xlabel("N")
+plt.ylabel("Result")
+plt.xticks(x, i_list)
+plt.legend()
+plt.tight_layout()
+plt.show()
 
 ```
 
 Accordingly, the code below checks whether the observed fixation rate matches the expected fixation probability for different values r of fitness of A:
 
 ```{python}
-SEED = 42
 N = 100
+n_of_experiments = 10 #todo change back to 1000
 
-for i in range(10,91,10):
-  for r in np.arange(0.2,2.1,0.4):
+observed_probs = []
+calculated_probs = []
+i_list = range(10,91,10)
+r_list = np.arange(0.2,2.1,0.4)
+
+for i in i_list:
+  for r in r_list:
     
     moran_model = MoranModel(N, i, r, 1, SEED)
     
@@ -132,13 +158,35 @@ for i in range(10,91,10):
     
     count=[] # list of the end states of i
     
-    for run in range(1000):
+    for run in range(n_of_experiments):
       count.append(moran_model.run_until_absorption()[-1])
-    obs_fix = (count.count(100))/1000
-    
-    print(i, f"{r:.2f}", f"{fix_prob:.4f}", f"{obs_fix:.4f}")
+    obs_fix = (count.count(100))/n_of_experiments
+
+    calculated_probs.append(fix_prob)
+    observed_probs.append(obs_fix)
+
+calculated_probs = np.array(calculated_probs)
+observed_probs   = np.array(observed_probs)
+
+x = np.arange(len(calculated_probs))  
+w = 0.35
+
+plt.figure(figsize=(12, 4))
+plt.bar(x - w/2, calculated_probs, width=w, label="Calculated")
+plt.bar(x + w/2, observed_probs,   width=w, label="Simulated")
+
+plt.xlabel("")
+plt.xticks([])
+plt.tick_params(axis="x", bottom=False)
+plt.ylabel("Result")
+plt.legend()
+plt.tight_layout()
+plt.show() 
 
 ```
+
+
+TODO: Note that the ones with 0.2 and 0.6 are always 0 or almost 0. Should we skip them? Also think about the two higher ones.
 
 ### *(3) Use your program to simulate data over time with and without selection for different population sizes. Vary the selection intensity to include a range of different values (both negative and positive selection). Summarize your results graphically. Is selection more efficient in smaller or larger populations? Can deleterious alleles (with negative selection coefficient) get fixed in a population? Under which conditions?*
 
