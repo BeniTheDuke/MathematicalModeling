@@ -19,6 +19,7 @@ execute:
 import numpy as np
 from moran import MoranModel
 import matplotlib.pyplot as plt
+
 ```
 
 # Set Seed
@@ -215,3 +216,33 @@ plt.tight_layout()
 plt.show()
   
 ```
+
+# How likely is it that disadvantage makes it?
+## Decreasing fitness
+
+```{python}
+fitness_list = np.arange(1, 0.8, -0.01)
+n_of_experiments = 100 #todo increase to 1000
+success_rates = []
+
+for r in fitness_list:
+  moran_model = MoranModel(100, 50, r, 1, SEED)
+  successes = 0
+  for _ in range(n_of_experiments):
+    if(moran_model.run_until_absorption()[-1]>0):
+      successes += 1
+  success_rate = 100 / n_of_experiments * successes
+  success_rates.append(success_rate)
+
+plt.figure()
+plt.plot(fitness_list, success_rates)
+plt.gca().invert_xaxis()
+plt.xlabel("Fitness (r)")
+plt.ylabel("Survival Rate (%)")
+plt.tight_layout()
+plt.show()
+
+```
+We're comparing the fitness between 0.8-1 to a fitness of 1.
+As expected, it is around 50% at an equal fitness of *1*. But decreasing the fitness decreases the survival rate rapidly. It comes close to zero at around 0.9. 
+However, theoretically there is always a chance for survival and the survival rate should never reach 0%. 

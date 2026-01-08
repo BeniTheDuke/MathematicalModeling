@@ -84,6 +84,8 @@ The **fixation probability** of A refers to the probability of reaching a state 
 
 #### Model simulation:
 
+todo: Only define the seed once and mention it.
+
 The below program simulates a Moran population model with selection.
 
 ```{python}
