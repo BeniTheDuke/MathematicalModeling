@@ -246,3 +246,61 @@ plt.show()
 We're comparing the fitness between 0.8-1 to a fitness of 1.
 As expected, it is around 50% at an equal fitness of *1*. But decreasing the fitness decreases the survival rate rapidly. It comes close to zero at around 0.9. 
 However, theoretically there is always a chance for survival and the survival rate should never reach 0%. 
+
+## Increasing Initial Population
+Let's continue with a decrease fitness of 0.9. Even if the survival chance is almost zero, we should be able to increase it by increasing the initial population:
+
+
+```{python}
+
+i_list = np.arange(50, 100, 2.5)
+n_of_experiments = 100 #todo increase to 1000
+success_rates = []
+
+for i in i_list:
+  moran_model = MoranModel(100, i, 0.9, 1, SEED)
+  successes = 0
+  for _ in range(n_of_experiments):
+    if(moran_model.run_until_absorption()[-1]>0):
+      successes += 1
+  success_rate = 100 / n_of_experiments * successes
+  success_rates.append(success_rate)
+
+plt.figure()
+plt.plot(i_list, success_rates)
+plt.xlabel("Initial population (i)")
+plt.ylabel("Survival Rate (%)")
+plt.tight_layout()
+plt.show()
+
+```
+
+The effect of the increase of the initial population (i) depends on the total population (n). Even in relative terms. If i is 90% of n, it depends on how high n is. 
+Todo explain further
+
+```{python}
+
+i_list = np.arange(100, 200, 5)
+n_of_experiments = 100 #todo increase to 1000
+success_rates = []
+
+for i in i_list:
+  moran_model = MoranModel(200, i, 0.9, 1, SEED)
+  successes = 0
+  for _ in range(n_of_experiments):
+    if(moran_model.run_until_absorption()[-1]>0):
+      successes += 1
+  success_rate = 100 / n_of_experiments * successes
+  success_rates.append(success_rate)
+
+plt.figure()
+plt.plot(i_list, success_rates)
+plt.xlabel("Initial population (i)")
+plt.ylabel("Survival Rate (%)")
+plt.tight_layout()
+plt.show()
+
+```
+
+
+Todo different Ns in the same graph (about 5)
