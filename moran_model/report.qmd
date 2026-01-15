@@ -7,11 +7,29 @@ format:
     number-sections: true
   pdf:
     number-sections: true
+    header-includes:
+      - \usepackage{wrapfig}
+      - \usepackage{graphicx}
+      - \usepackage{subfig}
+      - \usepackage{caption}
+    documentclass: scrreprt
+    geometry:
+      - left=15mm
+      - right=15mm
+      - top=20mm
+      - bottom=20mm
+      - foot=10mm
 execute:
   echo: true
   warning: false
   message: false
 ---
+```{=latex}
+\cleardoublepage
+\pagenumbering{arabic}
+\setcounter{page}{1}
+```
+
 ```{python}
 #| echo: false
 #| include: false
@@ -143,7 +161,7 @@ Accordingly, the code below checks whether the observed fixation rate matches th
 
 ```{python}
 N = 100
-n_of_experiments = 100 #todo change back to 1000
+n_of_experiments = 10 #todo change back to 1000
 
 observed_probs = []
 calculated_probs = []
@@ -199,3 +217,44 @@ TODO: Explain the plot. Key take away is that it works and is always close to th
 ## REFERENCES
 
 NOWAK, M. A. (2006). *Evolutionary Dynamics: Exploring the Equations of Life.* Harvard University Press. https://doi.org/10.2307/j.ctvjghw98
+
+# Can an Allele at a Disadvantage Survive?
+
+## Decreasing fitness
+
+```{python}
+#| echo: false
+fitness_list = np.arange(1, 0.8, -0.01)
+n_of_experiments = 10 #todo increase to 1000
+success_rates = []
+
+for r in fitness_list:
+  moran_model = MoranModel(100, 50, r, 1, SEED)
+  successes = 0
+  for _ in range(n_of_experiments):
+    if(moran_model.run_until_absorption()[-1]>0):
+      successes += 1
+  success_rate = 100 / n_of_experiments * successes
+  success_rates.append(success_rate)
+
+plt.figure(figsize=(4,3))
+plt.plot(fitness_list, success_rates)
+plt.gca().invert_xaxis()
+plt.xlabel("Fitness (r)")
+plt.ylabel("Survival Rate (%)")
+plt.tight_layout()
+plt.savefig("_DecreasingFitness.pdf")
+plt.close()
+
+```
+
+\begin{wrapfigure}{l}{0.4\textwidth}
+\vspace{-\baselineskip}
+\centering
+\includegraphics[width=0.9\linewidth]{_DecreasingFitness.pdf}
+\end{wrapfigure}
+
+We're comparing the fitness between 0.8-1 to a fitness of 1.
+As expected, it is around 50% at an equal fitness of *1*. But decreasing the fitness decreases the survival rate rapidly. It comes close to zero at around 0.9. 
+However, theoretically there is always a chance for survival and the survival rate should never reach 0%. 
+
