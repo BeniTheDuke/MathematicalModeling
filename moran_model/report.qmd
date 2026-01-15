@@ -214,13 +214,12 @@ TODO: Explain the plot. Key take away is that it works and is always close to th
 
 ### *(4) The Moran model is a birth-death model. How do the birth-death parameters influence the behavior of the model? Show in simulation. Discuss your results.*
 
-## REFERENCES
 
-NOWAK, M. A. (2006). *Evolutionary Dynamics: Exploring the Equations of Life.* Harvard University Press. https://doi.org/10.2307/j.ctvjghw98
+# Can a Disadvantaged Allele Still Survive? 
 
-# Can an Allele at a Disadvantage Survive?
+## Decreasing Fitness
 
-## Decreasing fitness
+Let's start by decreasing n and see whether there is still a chance for survival.
 
 ```{python}
 #| echo: false
@@ -243,18 +242,82 @@ plt.gca().invert_xaxis()
 plt.xlabel("Fitness (r)")
 plt.ylabel("Survival Rate (%)")
 plt.tight_layout()
-plt.savefig("_DecreasingFitness.pdf")
+plt.savefig("_DecreasingFitness.pdf", bbox_inches="tight") #todo Remove bbox_inches if not necessary
 plt.close()
 
 ```
 
-\begin{wrapfigure}{l}{0.4\textwidth}
-\vspace{-\baselineskip}
-\centering
-\includegraphics[width=0.9\linewidth]{_DecreasingFitness.pdf}
-\end{wrapfigure}
 
+\noindent
+\begin{minipage}[t]{0.45\textwidth}
+\centering
+\vspace{0pt}
+\includegraphics[width=\linewidth]{_DecreasingFitness.pdf}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.5\textwidth}
+\vspace{0pt}
 We're comparing the fitness between 0.8-1 to a fitness of 1.
 As expected, it is around 50% at an equal fitness of *1*. But decreasing the fitness decreases the survival rate rapidly. It comes close to zero at around 0.9. 
 However, theoretically there is always a chance for survival and the survival rate should never reach 0%. 
+\end{minipage}
 
+
+## Increasing Initial Population
+Let's continue with a decrease fitness of 0.9. Even if the survival chance is almost zero, we should be able to increase it by increasing the initial population:
+While doing so, we also try and see whether increasing the total population (n) but keeping the i-ratio makes a difference.
+
+
+```{python}
+#| echo: false
+n_of_experiments = 5 #todo increase to 200
+
+plt.figure(figsize=(4,3))
+
+n_list = [100, 200, 300, 400]
+
+for n in n_list:
+  i_step_size = int(n/50)
+  i_list = range(int(n/2), n + i_step_size, i_step_size)
+  success_rates = []
+
+  for i in i_list:
+    moran_model = MoranModel(n, i, 0.9, 1, SEED)
+    successes = 0
+    for _ in range(n_of_experiments):
+      if(moran_model.run_until_absorption()[-1]>0):
+        successes += 1
+    success_rate = 100 / n_of_experiments * successes
+    success_rates.append(success_rate)
+
+  i_list_as_percentage = [100 * i / n for i in i_list]
+  plt.plot(i_list_as_percentage, success_rates, label=f"n = {n}")
+
+
+plt.xlabel("Initial population i (%)")
+plt.ylabel("Survival Rate (%)")
+plt.legend()
+plt.tight_layout()
+plt.savefig("_IncreasingInitialPopulation.pdf", bbox_inches="tight")
+plt.close()
+
+```
+
+
+\noindent
+\begin{minipage}[t]{0.45\textwidth}
+\centering
+\vspace{0pt}
+\includegraphics[width=\linewidth]{_IncreasingInitialPopulation.pdf}
+\end{minipage}\hfill
+\begin{minipage}[t]{0.5\textwidth}
+\vspace{0pt}
+Todo: Explain what we see here. Yes, we can increase the survival rate by increasing the relative i. But also have a look at the survival rate when increasing the total population (and keeping the relative i)
+\end{minipage}
+
+
+\newpage
+\thispagestyle{empty}
+
+# REFERENCES
+
+NOWAK, M. A. (2006). *Evolutionary Dynamics: Exploring the Equations of Life.* Harvard University Press. https://doi.org/10.2307/j.ctvjghw98
