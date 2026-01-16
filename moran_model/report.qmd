@@ -214,17 +214,84 @@ plt.show()
 
 ```
 
+# Experiments
 
-### *(3) Use your program to simulate data over time with and without selection for different population sizes. Vary the selection intensity to include a range of different values (both negative and positive selection). Summarize your results graphically. Is selection more efficient in smaller or larger populations? Can deleterious alleles (with negative selection coefficient) get fixed in a population? Under which conditions?*
+***(Question) Use your program to simulate data over time with and without selection for different population sizes. Vary the selection intensity to include a range of different values (both negative and positive selection). Summarize your results graphically. Is selection more efficient in smaller or larger populations? Can deleterious alleles (with negative selection coefficient) get fixed in a population? Under which conditions?***
 
-### *(4) The Moran model is a birth-death model. How do the birth-death parameters influence the behavior of the model? Show in simulation. Discuss your results.*
+## Impact of N and i, with Equal Fitness
+We are examining the behaviour of a model with equal fitness. Specifically how many steps it takes to reach absorption/fixation. We want to examine four different i-to-N ratios, over increasing Ns. 
+  
+As displayed by the graph below: In general the model takes more steps as N increases.    
+A lower i-to-N ratio will decrease the required steps (at a given N). When going from a ratio of 1/2 to 1/4, the i is significantly reduced but the steps are only slightly reduced (Seen in the blue and green lines in the graph). We can even take it to the extreme and reduce i to 1, the most deleterious option for A without selection. Impressively the model still takes over 600 steps (at high Ns), even though there is a 50% chance that a run will end on the first step. 
+
+```{python}
+#| echo: false
+
+amount_of_experiments = 100 # Todo: Increase to 1000
+n_list = range(4, 105, 10)
+
+average_steps_Nhalf = []
+average_steps_Nhalf_minus1 = []
+average_steps_Nquarter = []
+average_steps_1 = []
+
+for n in n_list:
+  total_steps = 0
+  moran_model = MoranModel(n, n/2, 1, 1, SEED)
+  for i in range (amount_of_experiments):
+    history = moran_model.run_until_absorption()
+    total_steps += len(history)
+  average_steps_Nhalf.append(total_steps/amount_of_experiments)
+
+for n in n_list:
+  total_steps = 0
+  moran_model = MoranModel(n, (n/2) -1 , 1, 1, SEED)
+  for i in range (amount_of_experiments):
+    history = moran_model.run_until_absorption()
+    total_steps += len(history)
+  average_steps_Nhalf_minus1.append(total_steps/amount_of_experiments)
+
+for n in n_list:
+  total_steps = 0
+  moran_model = MoranModel(n, (n/4) , 1, 1, SEED)
+  for i in range (amount_of_experiments):
+    history = moran_model.run_until_absorption()
+    total_steps += len(history)
+  average_steps_Nquarter.append(total_steps/amount_of_experiments)
+
+for n in n_list:
+  total_steps = 0
+  moran_model = MoranModel(n, 1, 1, 1, SEED)
+  for i in range (amount_of_experiments):
+    history = moran_model.run_until_absorption()
+    total_steps += len(history)
+  average_steps_1.append(total_steps/amount_of_experiments)
+plt.figure()
+plt.plot(n_list, average_steps_Nhalf, label='i = N/2')
+plt.plot(n_list, average_steps_Nhalf_minus1, label='i = (N/2) - 1')
+plt.plot(n_list, average_steps_Nquarter, label='i = N/4')
+plt.plot(n_list, average_steps_1, label='i = 1')
+# --- Move Y-Axis to the right ---
+ax = plt.gca()
+ax.yaxis.tick_right()
+ax.yaxis.set_label_position("right")
+# --------------------------------
+plt.xlabel("N")
+plt.ylabel("Steps")
+plt.legend()
+plt.tight_layout()
+plt.show()
+
+```
 
 
-# Can a Disadvantaged Allele Still Survive? 
 
-## Decreasing Fitness
+## Can deleterious alleles get fixed in a population?
 
-Let's start by decreasing n and see whether there is still a chance for survival.
+### Decreasing Fitness
+
+Let's start by decreasing r and see whether there is still a chance for survival. 
+We run simulations varying the fitness *r* in the range of 0.8 and 1.
 
 ```{python}
 #| echo: false
@@ -261,15 +328,17 @@ plt.close()
 \end{minipage}\hfill
 \begin{minipage}[t]{0.5\textwidth}
 \vspace{0pt}
-We're comparing the fitness between 0.8-1 to a fitness of 1.
-As expected, it is around 50% at an equal fitness of *1*. But decreasing the fitness decreases the survival rate rapidly. It comes close to zero at around 0.9. 
-However, theoretically there is always a chance for survival and the survival rate should never reach 0%. 
+We are examining the probability of A surviving as its fitness r decreases, for a given N population (here 100). 
+Starting with fitness r = 1 the observed probability is as expected close to 50\%. 
+As r decreases, the probability of A getting fixed decreases rapidly and approaches 0 for values of r smaller than 0.9. 
+However, this graph draws from a finite numbers of experiments; 
+theoretically, there is always a chance of survival in the case of infinite experiments.
 \end{minipage}
 
 
-## Increasing Initial Population
-Let's continue with a decrease fitness of 0.9. Even if the survival chance is almost zero, we should be able to increase it by increasing the initial population:
-While doing so, we also try and see whether increasing the total population (n) but keeping the i-ratio makes a difference.
+### Increasing Initial Population
+Let's continue with a decreased fitness of 0.9. Even if the survival chance is almost zero, we should be able to increase it by increasing the initial population of A (i).  
+In parallel we also examine the impact of four different total populations *N*.
 
 
 ```{python}
@@ -295,10 +364,10 @@ for n in n_list:
     success_rates.append(success_rate)
 
   i_list_as_percentage = [100 * i / n for i in i_list]
-  plt.plot(i_list_as_percentage, success_rates, label=f"n = {n}")
+  plt.plot(i_list_as_percentage, success_rates, label=f"N = {n}")
 
 
-plt.xlabel("Initial population i (%)")
+plt.xlabel("Initial population i (% of N)")
 plt.ylabel("Survival Rate (%)")
 plt.legend()
 plt.tight_layout()
@@ -316,9 +385,17 @@ plt.close()
 \end{minipage}\hfill
 \begin{minipage}[t]{0.5\textwidth}
 \vspace{0pt}
-Todo: Explain what we see here. Yes, we can increase the survival rate by increasing the relative i. But also have a look at the survival rate when increasing the total population (and keeping the relative i)
+Indeed the survival rate increases with increased initial population of A (i).
+However, this effect diminishes when increasing the total population (N). 
+\newline
+\newline
+Looking at a fixed point in i (e.g. 90\%) we can see that a higher N decreases the chance of the deleterious allele surviving. I.e. selection is more efficient in larger populations.  
 \end{minipage}
 
+To answer our question: Yes, a deleterious allele can get fixed in a population. As presented by the experiments above, the conditions that increase the probability of surviving are:
+- A larger r (while still being deleterious, i.e. below 1)
+- Smaller total population N
+- Higher initial population i in respect to N
 
 \newpage
 \thispagestyle{empty}
