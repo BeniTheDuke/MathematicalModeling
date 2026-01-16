@@ -15,6 +15,10 @@ format:
     documentclass: article
     include-in-header:
       text: |
+        \usepackage{etoolbox}
+        \makeatletter
+        \patchcmd{\maketitle}{\thispagestyle{plain}}{\thispagestyle{empty}}{}{}
+        \makeatother
         \usepackage{sectsty}
         \allsectionsfont{\sffamily\bfseries}
     geometry:
@@ -421,4 +425,3 @@ The simulations run above are limited by computational capacity to a finite numb
 NOWAK, M. A. (2006). *Evolutionary Dynamics: Exploring the Equations of Life.* Harvard University Press. https://doi.org/10.2307/j.ctvjghw98
 
 
-todo: Add titles to diagrams?
