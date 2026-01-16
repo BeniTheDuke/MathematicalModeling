@@ -1,5 +1,5 @@
 ---
-title: "Moran Simulation"
+title: "The Moran model: Fixation time of beneficial alleles in populations of constant size"
 author: "Eleni Karfopoulou & Benjamin Herzog"
 format:
   html:
@@ -37,16 +37,17 @@ execute:
 import numpy as np
 from moran import MoranModel
 import matplotlib.pyplot as plt
+SEED = 42
 
 ```
 
-# The Moran model: Fixation time of beneficial alleles in populations of constant size
 
-### *(1) Formally define the Moran model of population dynamics with selection. List model’s assumptions. What is the probability of fixation of an allele, how does it depend on allele fitness? Write a program to simulate a population with selection.*
+# Definition of the Model
+***(Question) Formally define the Moran model of population dynamics with selection. List model’s assumptions. What is the probability of fixation of an allele, how does it depend on allele fitness? Write a program to simulate a population with selection.***
 
 The Moran model is a birth-death Markov model used to study population dynamics in biology. In this particular model we study the distribution of alleles across generations when there is selection, i.e. a particular allele presents with increased (or decreased) fitness that affects its probability for reproduction, as opposed to the neutral drift model, when alleles reproduce at the same rate. Chapter 6 of *Nowak, 2006* is used as reference.
 
-#### Model assumptions:
+## Model assumptions:
 
 -   The size of the population, *N*, is fixed.
 
@@ -58,7 +59,7 @@ The Moran model is a birth-death Markov model used to study population dynamics 
 
 -   In a Moran model with selection, A has fitness *r* and B has fitness 1. If *r* \> 1, selection favors A; if *r* \< 1, selection favors B. (When *r* = 1, this is the case of neutral drift.)
 
-#### Model description:
+## Model description:
 
 -   The number of A individuals in the population is denoted *i*, and the number of B individuals is thus *N - i*. The state space of *i* is 0, …., *N*.
 
@@ -92,37 +93,41 @@ The Moran model is a birth-death Markov model used to study population dynamics 
 
 The **fixation probability** of A refers to the probability of reaching a state where *i = N*, i.e. A has overtaken the entire population. In this model with selection, with the relative fitness of A being *r*, the fixation probability, starting from *i* individuals of A, is:
 
-χ~i~ = (1 - 1/r^i^) / (1 - 1/r^N^)
+$χ_i$ = (1 - 1/r^i^) / (1 - 1/r^N^)
 
 -   If there is no selective advantage, starting with *i* individuals of A, the probability of A overtaking the entire *N* population is *i/N*.
 
 -   If *r* \>1 in a large population *N*, the denominator approaches 1 and the equation approximates 1 - 1/r^i.^
 
--   If *r* \< 1, the nominator approaches 0 as *r* gets smaller.
+-   If *r* \< 1, the numerator approaches 0 as *r* gets smaller.
 
-#### Model simulation:
+## Model Simulation
 
-todo: Only define the seed once and mention it.
-
-todo: Add titles to diagrams?
-
-The below program simulates a Moran population model with selection.
+Our program simulates a Moran population model with selection.
+Running the simulation **for equal fitness**, the output graph displays the progression of i over time (steps) until either absorption or fixation:
 
 ```{python}
-SEED = 42
-
+#| echo: false
 moran_model = MoranModel(100, 50, 1, 1, SEED)
-for i in range(1,10):
-    print(moran_model.run_until_absorption()[-1])
-
+history = moran_model.run_until_absorption()
+plt.figure(figsize=(9,4))
+plt.plot(history)
+plt.xlabel("Steps")
+plt.ylabel("i", rotation=0)
+plt.tight_layout()
+plt.show()
+moran_model = MoranModel(100, 50, 1, 1, SEED)
 
 ```
 
-### *(2) Validate your program in simple simulation, show the results of validation.*
+# Model Validation:
 
-In a neutral model where fitness = 1 for both alleles, the fixation probability is i/N. If we run the model for 1000 runs, for N = 100, for different i, the number of times the end state of i is 100 should approximate i/N, as shown in the code below:
+***(Question) Validate your program in simple simulation, show the results of validation.***
+
+In a neutral model where fitness = 1 for both alleles, the fixation probability is i/N. If we run the model for 1000 runs, for N = 100, for different i, the observed fixation rate should approximate i/N. We have simulated this and compared the simulation results to the calculated probabilities. They are almost equal, as displayed in the graph below.
 
 ```{python}
+#| echo: false
 N = 100
 n_of_experiments = 10 #todo change back to 1000
 
@@ -149,7 +154,7 @@ plt.figure()
 plt.bar(x - w/2, calculated_probs, width=w, label="Calculated")
 plt.bar(x + w/2, observed_probs, width=w, label="Simulated")
 plt.xlabel("N")
-plt.ylabel("Result")
+plt.ylabel("Fixation Probability/Rate")
 plt.xticks(x, i_list)
 plt.legend()
 plt.tight_layout()
@@ -157,9 +162,11 @@ plt.show()
 
 ```
 
-Accordingly, the code below checks whether the observed fixation rate matches the expected fixation probability for different values r of fitness of A:
+Expanding the validation, we now check whether the observed fixation rate matches the expected fixation probability for different values r of fitness of A,
+for all the different combinations of i from 10 to 90 with steps of 10, and r from 0.8 to 1.3 with steps of 0.1. As displayed in the graph below, indeed the simulated rates and the calculated probabilites are almost identical, hence validating our program. 
 
 ```{python}
+#| echo: false
 N = 100
 n_of_experiments = 10 #todo change back to 1000
 
@@ -197,18 +204,16 @@ plt.figure(figsize=(12, 4))
 plt.bar(x - w/2, calculated_probs, width=w, label="Calculated")
 plt.bar(x + w/2, observed_probs,   width=w, label="Simulated")
 
-plt.xlabel("Experiments with different i and r")
+plt.xlabel("Experiments with different i and r\n (Note that some runs have a fixation probability/rate of 0)")
 plt.xticks([])
 plt.tick_params(axis="x", bottom=False)
-plt.ylabel("Result")
+plt.ylabel("Fixation Probability/Rate")
 plt.legend()
 plt.tight_layout()
 plt.show() 
 
 ```
 
-
-TODO: Explain the plot. Key take away is that it works and is always close to the calculated one
 
 ### *(3) Use your program to simulate data over time with and without selection for different population sizes. Vary the selection intensity to include a range of different values (both negative and positive selection). Summarize your results graphically. Is selection more efficient in smaller or larger populations? Can deleterious alleles (with negative selection coefficient) get fixed in a population? Under which conditions?*
 
@@ -321,3 +326,6 @@ Todo: Explain what we see here. Yes, we can increase the survival rate by increa
 # REFERENCES
 
 NOWAK, M. A. (2006). *Evolutionary Dynamics: Exploring the Equations of Life.* Harvard University Press. https://doi.org/10.2307/j.ctvjghw98
+
+
+todo: Add titles to diagrams?
