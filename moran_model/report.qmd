@@ -12,7 +12,11 @@ format:
       - \usepackage{graphicx}
       - \usepackage{subfig}
       - \usepackage{caption}
-    documentclass: scrreprt
+    documentclass: article
+    include-in-header:
+      text: |
+        \usepackage{sectsty}
+        \allsectionsfont{\sffamily\bfseries}
     geometry:
       - left=15mm
       - right=15mm
