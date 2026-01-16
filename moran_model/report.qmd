@@ -43,7 +43,6 @@ SEED = 42
 
 
 # Definition of the Model
-***(Question) Formally define the Moran model of population dynamics with selection. List model’s assumptions. What is the probability of fixation of an allele, how does it depend on allele fitness? Write a program to simulate a population with selection.***
 
 The Moran model is a birth-death Markov model used to study population dynamics in biology. In this particular model we study the distribution of alleles across generations when there is selection, i.e. a particular allele presents with increased (or decreased) fitness that affects its probability for reproduction, as opposed to the neutral drift model, when alleles reproduce at the same rate. Chapter 6 of *Nowak, 2006* is used as reference.
 
@@ -122,7 +121,6 @@ moran_model = MoranModel(100, 50, 1, 1, SEED)
 
 # Model Validation:
 
-***(Question) Validate your program in simple simulation, show the results of validation.***
 
 In a neutral model where fitness = 1 for both alleles, the fixation probability is i/N. If we run the model for 1000 runs, for N = 100, for different i, the observed fixation rate should approximate i/N. We have simulated this and compared the simulation results to the calculated probabilities. They are almost equal, as displayed in the graph below.
 
@@ -216,7 +214,6 @@ plt.show()
 
 # Experiments
 
-***(Question) Use your program to simulate data over time with and without selection for different population sizes. Vary the selection intensity to include a range of different values (both negative and positive selection). Summarize your results graphically. Is selection more efficient in smaller or larger populations? Can deleterious alleles (with negative selection coefficient) get fixed in a population? Under which conditions?***
 
 ## Impact of N and i, with Equal Fitness
 We are examining the behaviour of a model with equal fitness. Specifically how many steps it takes to reach absorption/fixation. We want to examine four different i-to-N ratios, over increasing Ns. 
@@ -397,8 +394,23 @@ To answer our question: Yes, a deleterious allele can get fixed in a population.
 - Smaller total population N
 - Higher initial population i in respect to N
 
+
+# Discussion
+
+
+
+Drawing from the simulations and graphs presented and discussed above, we can summarize the parameters of the model and their effects on its behavior as follows:
+
+- The total population N: As N increases, the model takes more steps (i.e. more time) on average to reach fixation. These extra steps limit the ability of a deleterious allele to make it just by pure chance, thus, as N increases, the probability of a deleterious allele to survive decreases.
+- The initial population i, of the allele of interest, expressed relevant to N (e.g. N/2, N/4): As i decreases, the model will take fewer steps, at a given N, to reach fixation. In other words, starting with fewer As means the Bs will be faster in taking over.
+- The fitness r of the deleterious allele: As r drops below 1 (i.e. A comes into disadvantage compared to B), the survival rate of A rapidly diminishes. In other words, deleterious alleles with a slight disadvantage may survive, but considerable disadvantages will almost certainly lead to extinction.
+
+The simulations run above are limited by computational capacity to a finite number of runs for each experiment. It should thus be taken into account that, in theory, there is always the possibility, no matter how small, that a deleterious allele survives.
+
+
 \newpage
 \thispagestyle{empty}
+
 
 # REFERENCES
 
