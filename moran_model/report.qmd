@@ -135,7 +135,7 @@ In a neutral model where fitness = 1 for both alleles, the fixation probability 
 ```{python}
 #| echo: false
 N = 100
-n_of_experiments = 10 #todo change back to 1000
+n_of_experiments = 1000
 
 
 observed_probs = []
@@ -174,7 +174,7 @@ for all the different combinations of i from 10 to 90 with steps of 10, and r fr
 ```{python}
 #| echo: false
 N = 100
-n_of_experiments = 10 #todo change back to 1000
+n_of_experiments = 1000
 
 observed_probs = []
 calculated_probs = []
@@ -232,7 +232,7 @@ A lower i-to-N ratio will decrease the required steps (at a given N). When going
 ```{python}
 #| echo: false
 
-amount_of_experiments = 100 # Todo: Increase to 1000
+amount_of_experiments = 1000
 n_list = range(4, 105, 10)
 
 average_steps_Nhalf = []
@@ -301,7 +301,7 @@ We run simulations varying the fitness *r* in the range of 0.8 and 1.
 ```{python}
 #| echo: false
 fitness_list = np.arange(1, 0.8, -0.01)
-n_of_experiments = 10 #todo increase to 1000
+n_of_experiments = 1000
 success_rates = []
 
 for r in fitness_list:
@@ -319,7 +319,7 @@ plt.gca().invert_xaxis()
 plt.xlabel("Fitness (r)")
 plt.ylabel("Survival Rate (%)")
 plt.tight_layout()
-plt.savefig("_DecreasingFitness.pdf", bbox_inches="tight") #todo Remove bbox_inches if not necessary
+plt.savefig("_DecreasingFitness.pdf", bbox_inches="tight") 
 plt.close()
 
 ```
@@ -348,7 +348,7 @@ In parallel we also examine the impact of four different total populations *N*.
 
 ```{python}
 #| echo: false
-n_of_experiments = 5 #todo increase to 200
+n_of_experiments = 200
 
 plt.figure(figsize=(4,3))
 
