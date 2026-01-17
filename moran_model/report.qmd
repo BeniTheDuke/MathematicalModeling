@@ -56,9 +56,9 @@ List model’s assumptions. What is the probability of fixation of an allele,
 how does it depend on allele fitness? Write a program to simulate a 
 population with selection.***  
 
-The Moran model is a birth-death Markov model used to study population dynamics in biology. In this particular model we study the distribution of alleles across generations when there is selection, i.e. a particular allele presents with increased (or decreased) fitness that affects its probability for reproduction, as opposed to the neutral drift model, when alleles reproduce at the same rate. Chapter 6 of *Nowak, 2006* is used as reference.
+The Moran model is a birth-death Markov model used to study population dynamics in biology. In this report we study the distribution of alleles across generations when there is selection, i.e. a particular allele presents with increased (or decreased) fitness that affects its probability for reproduction, as opposed to the neutral drift model, when alleles reproduce at the same rate. Chapter 6 of *Nowak, 2006* is used as reference.
 
-## Model assumptions:
+## Model assumptions
 
 -   The size of the population, *N*, is fixed.
 
@@ -66,11 +66,11 @@ The Moran model is a birth-death Markov model used to study population dynamics 
 
 -   [At every time step]{.underline}, one random individual from the population is chosen to reproduce and one random individual is chosen to die. Sampling with replacement applies, i.e. it could be the same individual chosen for reproduction as well as death.
 
--   Reproduction leads to A producing A, and B producing B.
+-   Reproduction leads to A producing A, and B producing B (i.e. no mutations).
 
 -   In a Moran model with selection, A has fitness *r* and B has fitness 1. If *r* \> 1, selection favors A; if *r* \< 1, selection favors B. (When *r* = 1, this is the case of neutral drift.)
 
-## Model description:
+## Model description
 
 -   The number of A individuals in the population is denoted *i*, and the number of B individuals is thus *N - i*. The state space of *i* is 0, …., *N*.
 
@@ -102,15 +102,15 @@ The Moran model is a birth-death Markov model used to study population dynamics 
 
 -   No other transition is possible, thus all other entries are 0. Also, P~0, 0~ = 1, P~0, i~ = 0, P~N, N~ = 1 and P~N, 0~ = 0, i.e. 0 and *N* are absorbing states.
 
-The **fixation probability** of A refers to the probability of reaching a state where *i = N*, i.e. A has overtaken the entire population. In this model with selection, with the relative fitness of A being *r*, the fixation probability, starting from *i* individuals of A, is:
+The **fixation probability** of A refers to the probability of reaching a state where *i = N*, i.e. A has overtaken the entire population. In a model with selection, with the relative fitness of A being *r*, the fixation probability, starting from *i* individuals of A, is:
 
 $χ_i$ = (1 - 1/r^i^) / (1 - 1/r^N^)
 
 -   If there is no selective advantage, starting with *i* individuals of A, the probability of A overtaking the entire *N* population is *i/N*.
 
--   If *r* \>1 in a large population *N*, the denominator approaches 1 and the equation approximates 1 - 1/r^i.^
+-   If *r* \>1 in a large population *N*, the denominator approaches 1 and the equation approximates 1 - 1/r^i^. Thus, the larger the r (i.e. the larger the advantage), and the larger the i (i.e. more initial individuals), the higher the chance of A overtaking the population, since the subtracted fraction decreases.
 
--   If *r* \< 1, the numerator approaches 0 as *r* gets smaller.
+-   If *r* \< 1, the numerator approaches 0 as *r* gets smaller. Thus, the more pronounced the reproductive disadvantage of A is, the chance of survival further decreases.
 
 ## Model Simulation
 
@@ -131,7 +131,7 @@ moran_model = MoranModel(100, 50, 1, 1, SEED)
 
 ```
 
-# Model Validation:
+# Model Validation
 ***(Question) Validate your program in simple simulation, show the results of validation.***
 
 In a neutral model where fitness = 1 for both alleles, the fixation probability is i/N. If we run the model for 1000 runs, for N = 100, for different i, the observed fixation rate should approximate i/N. We have simulated this and compared the simulation results to the calculated probabilities. They are almost equal, as displayed in the graph below.
@@ -173,7 +173,7 @@ plt.show()
 ```
 
 Expanding the validation, we now check whether the observed fixation rate matches the expected fixation probability for different values r of fitness of A,
-for all the different combinations of i from 10 to 90 with steps of 10, and r from 0.8 to 1.3 with steps of 0.1. As displayed in the graph below, indeed the simulated rates and the calculated probabilities are almost identical, hence validating our program. 
+for all the different combinations of i from 10 to 90 (for N = 100) with steps of 10, and r from 0.8 to 1.3 with steps of 0.1. As displayed in the graph below, indeed the simulated rates and the calculated probabilities are almost identical, hence validating our program. 
 
 ```{python}
 #| echo: false
@@ -232,10 +232,10 @@ results graphically. Is selection more efficient in smaller or larger
 populations? Can deleterious alleles (with negative selection coefficient) get 
 fixed in a population? Under which conditions?***
 
-## Impact of N and i, with Equal Fitness
+## Impact of N and i, with equal fitness
 We are examining the behaviour of a model with equal fitness. Specifically how many steps it takes to reach absorption/fixation. We want to examine four different i-to-N ratios, over increasing Ns. 
   
-As displayed by the graph below: In general the model takes more steps as N increases.    
+As displayed in the graph below, in general the model takes more steps as N increases.    
 A lower i-to-N ratio will decrease the required steps (at a given N). When going from a ratio of 1/2 to 1/4, the i is significantly reduced but the steps are only slightly reduced (seen in the blue and green lines in the graph). We can even take it to the extreme and reduce i to 1, the most deleterious option for A without selection. Impressively the model still takes over 600 steps (at high Ns), even though there is a 50% chance that a run will end on the first step. 
 
 ```{python}
@@ -305,7 +305,7 @@ plt.show()
 ### Decreasing Fitness
 
 Let's start by decreasing r and see whether there is still a chance for survival. 
-We run simulations varying the fitness *r* in the range of 0.8 and 1.
+We run simulations varying the fitness *r* in the range between 0.8 and 1.
 
 ```{python}
 #| echo: false
@@ -351,7 +351,7 @@ theoretically, there is always a chance of survival in the case of infinite expe
 
 
 ### Increasing Initial Population
-Let's continue with a decreased fitness of r = 0.9. Even if the survival chance is almost zero, we should be able to increase it by increasing the initial population of A (i).  
+Let's continue with a decreased fitness of r = 0.9. Even if the survival chance is almost zero, we should be able to increase it by increasing the initial population *i* of A.  
 In parallel we also examine the impact of four different total populations *N*.
 
 
@@ -399,15 +399,15 @@ plt.close()
 \end{minipage}\hfill
 \begin{minipage}[t]{0.5\textwidth}
 \vspace{0pt}
-Indeed the fixation rate increases with increased initial population of A (i).
-However, this effect diminishes when increasing the total population (N). 
+Indeed the fixation rate increases with increased initial population *i* of A.
+However, this effect diminishes when increasing the total population *N*. 
 \newline
 \newline
-Looking at a fixed point in i (e.g. 90\%) we can see that a higher N decreases the chance of the deleterious allele surviving. I.e. selection is more efficient in larger populations.  
+Looking at a fixed *i* (e.g. 90\%) we can see that a higher *N* decreases the chance of the deleterious allele surviving, i.e. selection is more efficient in larger populations.  
 \end{minipage}
 
 To answer our question: Yes, a deleterious allele can get fixed in a population. As presented by the experiments above, the conditions that increase the probability of surviving are:
-- A larger r (while still being deleterious, i.e. below 1)
+- A larger r (while still being disadvantaged, i.e. below 1)
 - Smaller total population N
 - Higher initial population i in respect to N
 
@@ -419,7 +419,7 @@ Discuss your results.***
   
 Drawing from the simulations and graphs presented and discussed above, we can summarize the parameters of the model and their effects on its behavior as follows:
 
-- The total population N: As N increases, the model takes more steps (i.e. more time) on average to reach fixation. These extra steps limit the ability of a deleterious allele to make it just by pure chance, thus, as N increases, the probability of a deleterious allele to survive decreases.
+- The total population N: As N increases, the model takes more steps (i.e. more time) on average to reach fixation. These extra steps limit the ability of a deleterious allele (with reproductive disadvantage) to make it just by pure chance, thus, as N increases, the probability of a deleterious allele to survive decreases.
 - The initial population i, of the allele of interest, expressed relevant to N (e.g. N/2, N/4): As i decreases, the model will take fewer steps, at a given N, to reach fixation. In other words, starting with fewer As means the Bs will be faster in taking over.
 - The fitness r of the deleterious allele: As r drops below 1 (i.e. A comes into disadvantage compared to B), the fixation probability of A rapidly diminishes. In other words, deleterious alleles with a slight disadvantage may survive, but considerable disadvantages will almost certainly lead to extinction.
 
