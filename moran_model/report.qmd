@@ -64,7 +64,7 @@ The Moran model is a birth-death Markov model used to study population dynamics 
 
 -   There are two types of alleles of interest in the population, A and B. (For ease of reference, we will refer to the individuals -carrying those alleles- as A and B.)
 
--   [At every one time step]{.underline}, one random individual from the population is chosen to reproduce and one random individual is chosen to die. Sampling with replacement applies, i.e. it could be the same individual chosen for reproduction as well as death.
+-   [At every time step]{.underline}, one random individual from the population is chosen to reproduce and one random individual is chosen to die. Sampling with replacement applies, i.e. it could be the same individual chosen for reproduction as well as death.
 
 -   Reproduction leads to A producing A, and B producing B.
 
@@ -173,7 +173,7 @@ plt.show()
 ```
 
 Expanding the validation, we now check whether the observed fixation rate matches the expected fixation probability for different values r of fitness of A,
-for all the different combinations of i from 10 to 90 with steps of 10, and r from 0.8 to 1.3 with steps of 0.1. As displayed in the graph below, indeed the simulated rates and the calculated probabilites are almost identical, hence validating our program. 
+for all the different combinations of i from 10 to 90 with steps of 10, and r from 0.8 to 1.3 with steps of 0.1. As displayed in the graph below, indeed the simulated rates and the calculated probabilities are almost identical, hence validating our program. 
 
 ```{python}
 #| echo: false
@@ -236,7 +236,7 @@ fixed in a population? Under which conditions?***
 We are examining the behaviour of a model with equal fitness. Specifically how many steps it takes to reach absorption/fixation. We want to examine four different i-to-N ratios, over increasing Ns. 
   
 As displayed by the graph below: In general the model takes more steps as N increases.    
-A lower i-to-N ratio will decrease the required steps (at a given N). When going from a ratio of 1/2 to 1/4, the i is significantly reduced but the steps are only slightly reduced (Seen in the blue and green lines in the graph). We can even take it to the extreme and reduce i to 1, the most deleterious option for A without selection. Impressively the model still takes over 600 steps (at high Ns), even though there is a 50% chance that a run will end on the first step. 
+A lower i-to-N ratio will decrease the required steps (at a given N). When going from a ratio of 1/2 to 1/4, the i is significantly reduced but the steps are only slightly reduced (seen in the blue and green lines in the graph). We can even take it to the extreme and reduce i to 1, the most deleterious option for A without selection. Impressively the model still takes over 600 steps (at high Ns), even though there is a 50% chance that a run will end on the first step. 
 
 ```{python}
 #| echo: false
@@ -326,7 +326,7 @@ plt.figure(figsize=(4,3))
 plt.plot(fitness_list, success_rates)
 plt.gca().invert_xaxis()
 plt.xlabel("Fitness (r)")
-plt.ylabel("Survival Rate (%)")
+plt.ylabel("Fixation Rate (%)")
 plt.tight_layout()
 plt.savefig("_DecreasingFitness.pdf", bbox_inches="tight") 
 plt.close()
@@ -351,7 +351,7 @@ theoretically, there is always a chance of survival in the case of infinite expe
 
 
 ### Increasing Initial Population
-Let's continue with a decreased fitness of 0.9. Even if the survival chance is almost zero, we should be able to increase it by increasing the initial population of A (i).  
+Let's continue with a decreased fitness of r = 0.9. Even if the survival chance is almost zero, we should be able to increase it by increasing the initial population of A (i).  
 In parallel we also examine the impact of four different total populations *N*.
 
 
@@ -382,7 +382,7 @@ for n in n_list:
 
 
 plt.xlabel("Initial population i (% of N)")
-plt.ylabel("Survival Rate (%)")
+plt.ylabel("Fixation Rate (%)")
 plt.legend()
 plt.tight_layout()
 plt.savefig("_IncreasingInitialPopulation.pdf", bbox_inches="tight")
@@ -399,7 +399,7 @@ plt.close()
 \end{minipage}\hfill
 \begin{minipage}[t]{0.5\textwidth}
 \vspace{0pt}
-Indeed the survival rate increases with increased initial population of A (i).
+Indeed the fixation rate increases with increased initial population of A (i).
 However, this effect diminishes when increasing the total population (N). 
 \newline
 \newline
@@ -421,7 +421,7 @@ Drawing from the simulations and graphs presented and discussed above, we can su
 
 - The total population N: As N increases, the model takes more steps (i.e. more time) on average to reach fixation. These extra steps limit the ability of a deleterious allele to make it just by pure chance, thus, as N increases, the probability of a deleterious allele to survive decreases.
 - The initial population i, of the allele of interest, expressed relevant to N (e.g. N/2, N/4): As i decreases, the model will take fewer steps, at a given N, to reach fixation. In other words, starting with fewer As means the Bs will be faster in taking over.
-- The fitness r of the deleterious allele: As r drops below 1 (i.e. A comes into disadvantage compared to B), the survival rate of A rapidly diminishes. In other words, deleterious alleles with a slight disadvantage may survive, but considerable disadvantages will almost certainly lead to extinction.
+- The fitness r of the deleterious allele: As r drops below 1 (i.e. A comes into disadvantage compared to B), the fixation probability of A rapidly diminishes. In other words, deleterious alleles with a slight disadvantage may survive, but considerable disadvantages will almost certainly lead to extinction.
 
 The simulations run above are limited by computational capacity to a finite number of runs for each experiment. It should thus be taken into account that, in theory, there is always the possibility, no matter how small, that a deleterious allele survives.
 
