@@ -407,6 +407,7 @@ Looking at a fixed *i* (e.g. 90\%) we can see that a higher *N* decreases the ch
 \end{minipage}
 
 To answer our question: Yes, a deleterious allele can get fixed in a population. As presented by the experiments above, the conditions that increase the probability of surviving are:
+
 - A larger r (while still being disadvantaged, i.e. below 1)
 - Smaller total population N
 - Higher initial population i in respect to N
